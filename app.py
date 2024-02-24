@@ -70,11 +70,9 @@ def music():
         new_musician = request.form['musician']
         new_lang = request.form['language']
         new_title = request.form['title']
-        new_music_id = cursor.lastrowid+1
-        sql="""INSERT INTO music (id, musician, language, title) VALUES (%s,%s,%s)"""
-        cursor=cursor.execute(sql,(new_music_id,new_musician,new_lang,new_title))
+        sql="""INSERT INTO music (musician, language, title) VALUES (%s,%s,%s)"""
+        cursor=cursor.execute(sql,(new_musician,new_lang,new_title))
         conn.commit()
-        new_music_id = cursor.lastrowid
         return "complete"
 
 if __name__ == '__main__':
