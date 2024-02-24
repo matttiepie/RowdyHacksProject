@@ -74,6 +74,28 @@ def music():
         cursor=cursor.execute(sql,(new_musician,new_lang,new_title))
         conn.commit()
         return "complete"
+    
+@app.route('/addUser', methods=['POST'])
+def addUser():
+    conn=db_connection()
+    cursor=conn.cursor()
+   # Retrieve data from the form
+    new_user = request.form['USERNAME']
+    new_password = request.form['PASSWORD']
+
+# Check if the username already exists
+    check_sql = "SELECT * FROM user WHERE USERNAME = %s"
+    cursor.execute(check_sql, (new_user,))
+    existing_user = cursor.fetchone()
+
+    if existing_user:
+        return "Username already exists"
+    else:
+        # Insert the new user if the username doesn't exist
+        sql = "INSERT INTO user (USERNAME, PASSWORD) VALUES (%s, %s)"
+        cursor.execute(sql, (new_user, new_password))
+        conn.commit()
+        return "User Added"
 
 if __name__ == '__main__':
     app.run(debug=True)
