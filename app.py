@@ -1,35 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template,redirect,url_for,request
 import json
 import pymysql
 
 app = Flask(__name__)
 
-music_list = [
-    {
-        "id": 0,
-        "musician": "Tame Impala",
-        "language": "English",
-        "title": "The Less I Know The Better"
-    },
-    {
-        "id": 1,
-        "musician": "Kanye West",
-        "language": "English",
-        "title": "Runaway"
-    },
-    {
-        "id": 2,
-        "musician": "Creed",
-        "language": "English",
-        "title": "My Sacrifice"
-    },
-    {
-        "id": 3,
-        "musician": "The Eagles",
-        "language": "English",
-        "title": "Hotel California"
-    }
-]
+
 def db_connection():
     conn=None
     try:
@@ -48,7 +23,7 @@ def db_connection():
 
 @app.route('/')
 def print_hello():
-    return 'hello world'
+    return render_template('index.html')
 
 
 @app.route('/music', methods=['GET', 'POST'])
@@ -77,25 +52,28 @@ def music():
     
 @app.route('/addUser', methods=['POST'])
 def addUser():
-    conn=db_connection()
-    cursor=conn.cursor()
-   # Retrieve data from the form
+    conn = db_connection()
+    cursor = conn.cursor()
+    
+    # Retrieve data from the form
     new_user = request.form['USERNAME']
     new_password = request.form['PASSWORD']
 
-# Check if the username already exists
+    # Check if the username already exists
     check_sql = "SELECT * FROM user WHERE USERNAME = %s"
     cursor.execute(check_sql, (new_user,))
     existing_user = cursor.fetchone()
 
     if existing_user:
-        return "Username already exists"
+        error_message = "Username already exists. Please choose a different username."
+        return render_template('index.html', error=error_message)
     else:
         # Insert the new user if the username doesn't exist
         sql = "INSERT INTO user (USERNAME, PASSWORD) VALUES (%s, %s)"
         cursor.execute(sql, (new_user, new_password))
         conn.commit()
-        return "User Added"
+        return render_template('index.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
