@@ -20,6 +20,68 @@ def db_connection():
         print(e)
     return conn
 
+songs = []
+plList = []
+playlists = {}
+
+def parse_file():
+    dataFile = open("data/spotify_dataset.csv",'r')
+    lines = dataFile.readlines()
+    datasetLines = lines[1:]
+    playlists = {}
+    songSet = set()
+    plSet = set()
+    for line in datasetLines:
+        lineFormat = line.split("\",\"")
+        plName = lineFormat[3].replace('\"', '').replace('\n', '').replace(',','').strip()
+        if not(plName in playlists):
+            playlists[plName] = []
+        playlists[plName].append((lineFormat[1], lineFormat[2]))
+        songSet.add(lineFormat[2])
+        plSet.add(plName)
+    
+    plList = [item for item in plSet]
+    songs = [item for item in songSet]
+    plSet = {}
+    songSet = {}
+
+def get_usr_recs():
+    i = 0
+    fitness_threshold = 0.2
+    usrPL = get_user_playlist()
+    recSongs = True
+    temp = init_state(1000, plList)
+    userRecs = set()
+
+    while recSongs:
+        if i > 500:
+            temp = init_state(1000, plList)
+
+        try:
+            for member in temp:
+                tempMember = fit_func(member, usrPL, fitness_threshold)
+                member = tempMember
+                if member[1] > fitness_threshold:
+                    for song in member[0]:
+                        if song[1] in usrPL:
+                            continue
+                        userRecs.add(song)
+                elif member[1] > max:
+                    max = member[1]
+        except:
+            print(f"Exception")
+        
+        try:
+            tempSorted = sorted(temp, key=lambda x: x[1], reverse=True)
+        except:
+            print(f"Exception")
+
+        temp = splice_playlists(temp)
+
+        i = i + 1
+        if len(userRecs) >= 10:
+            recSongs = False
+
 @app.route('/')
 def print_hello():
     return render_template('index.html')
