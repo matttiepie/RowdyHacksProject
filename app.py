@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template,redirect,url_for,request
 import json
 import pymysql
+import random as rand
 
 app = Flask(__name__)
 
@@ -26,9 +27,10 @@ def print_hello():
 @app.route('/login.html')
 def user_login():
     return render_template('login.html')
+
 @app.route('/playlist.html')
 def playlist():
-    return render_template('playlist.html')
+    return render_template('playlist.html', songs=songs)
 
 @app.route('/music', methods=['GET', 'POST'])
 def music():
