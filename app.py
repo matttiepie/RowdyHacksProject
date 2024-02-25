@@ -50,14 +50,10 @@ def get_user_playlist():
   for i in range (0,10):
     userPlaylist.append(songs[rand.randint(0, len(songs) - 1)])
   return userPlaylist
-  
+
 def fit_func(state, usrPL, target):
   fitness = 0
   count = 0
-
-  for item in state[0]:
-    if item == 0:
-      print("zero found")
 
   for item in state[0]:
     try:
@@ -80,22 +76,14 @@ def fit_func(state, usrPL, target):
   return state
 
 def init_state(size, spikedPL):
-  flag = 0
   try:
-    flag = 1
     init = []
-    flag = 2
     for i in range(0, min(len(spikedPL),size)):
-      if i % 3 == 0:
-        flag = 3
-      flag = 4
       newMember = playlists[spikedPL[rand.randint(0, len(spikedPL) - 1)]]
-      flag = 5
       init.append([newMember, 0])
-    flag = 6
     return init
   except:
-    print(f"Caught at {flag} | spiked")
+    print(f"Exception")
     return -1
 
 def splice_playlists(state):
