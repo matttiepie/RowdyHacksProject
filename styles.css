@@ -1,5 +1,5 @@
 body{
-    background-image: url(../images/waves.jpg);
+    background-image: url_for('static', filename='siren_logo_simple.png');
     background-size:cover;
     background-position:center;
     margin:0%;
