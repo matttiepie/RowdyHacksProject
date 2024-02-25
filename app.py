@@ -159,6 +159,16 @@ def user_login():
 def playlist():
     return render_template('playlist.html', songs=songs)
 
+@app.route('/playlist.html/search')
+def song_search():
+    found = []
+    song_name = request.form.get("song_name")
+    for song in songs:
+        if song_name in song:
+            found.append(song)
+    return render_template('playlist.html', found=found)
+
+
 @app.route('/music', methods=['GET', 'POST'])
 def music():
     conn=db_connection()

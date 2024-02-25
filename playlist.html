@@ -27,10 +27,16 @@
                 <p>Add Song</p>
             </h1>
                 <form action="/search" method="get">
-                    <input type="text" name="q" placeholder="Search...">
+                    <input type="text" name="song_name" placeholder="Search...">
                     <button type="submit">Search</button>
                 </form>
-                <div class="leftcontentbox"><p>placeholder text for leftcontent</p></div>
+                <div class="leftcontentbox">
+                    <ul>
+                        {% for item in found %}
+                            <li>{{ item[1] }}<br/>{{ item[0] }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
             <div class="rightbox">
                 <p class="rightboxtitle">Recommended Songs</p>
