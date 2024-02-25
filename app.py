@@ -45,6 +45,83 @@ def parse_file():
     plSet = {}
     songSet = {}
 
+def get_user_playlist():
+  userPlaylist = []
+  for i in range (0,10):
+    userPlaylist.append(songs[rand.randint(0, len(songs) - 1)])
+  return userPlaylist
+  
+def fit_func(state, usrPL, target):
+  fitness = 0
+  count = 0
+
+  for item in state[0]:
+    if item == 0:
+      print("zero found")
+
+  for item in state[0]:
+    try:
+      if item[1] in usrPL:
+        count = count + 1
+    except:
+        continue
+  if count > 0:
+    percent = count / len(state[0])
+    if percent >= target:
+      fitness = ((-1 * (1/(1 - target)) * abs(percent - target)) + 1)
+    else:
+      fitness = (-1 * (1 / target) * abs(percent - target) + 1)
+  fitness = fitness + (1/len(usrPL))
+  if fitness < 0:
+    fitness = 0
+  elif fitness > 1:
+    fitness = 1
+  state[1] = fitness
+  return state
+
+def init_state(size, spikedPL):
+  flag = 0
+  try:
+    flag = 1
+    init = []
+    flag = 2
+    for i in range(0, min(len(spikedPL),size)):
+      if i % 3 == 0:
+        flag = 3
+      flag = 4
+      newMember = playlists[spikedPL[rand.randint(0, len(spikedPL) - 1)]]
+      flag = 5
+      init.append([newMember, 0])
+    flag = 6
+    return init
+  except:
+    print(f"Caught at {flag} | spiked")
+    return -1
+
+def splice_playlists(state):
+  state = [member for member in state]
+  newState = []
+  splitInd = 0
+
+  for i in range(0, len(state), 2):
+    child_1 = []
+    child_2 = []
+    splitInd = rand.randint(0, min(len(state[i][0]), len(state[i + 1][0])) - 1)
+    child_1.append(state[i][0][:splitInd] + state[i + 1][0][splitInd:])
+    child_1.append(0.0)
+    child_2.append(state[i + 1][0][:splitInd] + state[i][0][splitInd:])
+    child_2.append(0.0)
+
+    chance = rand.randint(0,20)
+    if chance == 0:
+      child_1[0][rand.randint(0, len(child_1[0]) - 1)] = songs[rand.randint(0, len(songs) - 1)]
+    elif chance == 1:
+      child_2[0][rand.randint(0, len(child_2[0]) - 1)] = songs[rand.randint(0, len(songs) - 1)]
+
+    newState.append(child_1)
+    newState.append(child_2)
+  return newState
+
 def get_usr_recs():
     i = 0
     fitness_threshold = 0.2
