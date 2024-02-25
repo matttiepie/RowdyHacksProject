@@ -151,6 +151,10 @@ def get_usr_recs():
 def print_hello():
     return render_template('index.html')
 
+@app.route('/index.html')
+def start():
+    return render_template('index.html')
+
 @app.route('/login.html')
 def user_login():
     return render_template('login.html')
@@ -159,7 +163,7 @@ def user_login():
 def playlist():
     return render_template('playlist.html', songs=songs)
 
-@app.route('/playlist.html/search')
+@app.route('/search')
 def song_search():
     found = []
     song_name = request.form.get("song_name")
@@ -167,6 +171,7 @@ def song_search():
         if song_name in song:
             found.append(song)
     return render_template('playlist.html', found=found)
+
 
 
 @app.route('/music', methods=['GET', 'POST'])
