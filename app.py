@@ -19,15 +19,16 @@ def db_connection():
         print(e)
     return conn
 
-# selector functionality
-plList = []
-songs = []
-playlists = {}
-
 @app.route('/')
 def print_hello():
     return render_template('index.html')
 
+@app.route('/login.html')
+def user_login():
+    return render_template('login.html')
+@app.route('/playlist.html')
+def playlist():
+    return render_template('playlist.html')
 
 @app.route('/music', methods=['GET', 'POST'])
 def music():
@@ -68,7 +69,7 @@ def addUser():
 
     if existing_user:
         error_message = "Username already exists. Please choose a different username."
-        return render_template('next.html')
+        return render_template('playlist.html')
     else:
         # Insert the new user if the username doesn't exist
         sql = "INSERT INTO login (USERNAME, PASSWORD) VALUES (%s, %s)"
