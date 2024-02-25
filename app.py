@@ -19,6 +19,11 @@ def db_connection():
         print(e)
     return conn
 
+# selector functionality
+plList = []
+songs = []
+playlists = {}
+
 @app.route('/')
 def print_hello():
     return render_template('index.html')
