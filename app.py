@@ -25,7 +25,7 @@ plList = []
 playlists = {}
 
 def parse_file():
-    dataFile = open("data/spotify_dataset.csv",'r')
+    dataFile = open("data/spotify_dataset.csv",'r', encoding='utf-8')
     lines = dataFile.readlines()
     datasetLines = lines[1:]
     playlists = {}
@@ -83,7 +83,6 @@ def init_state(size, spikedPL):
       init.append([newMember, 0])
     return init
   except:
-    print(f"Exception")
     return -1
 
 def splice_playlists(state):
@@ -134,12 +133,12 @@ def get_usr_recs():
                 elif member[1] > max:
                     max = member[1]
         except:
-            print(f"Exception")
+            continue
         
         try:
             tempSorted = sorted(temp, key=lambda x: x[1], reverse=True)
         except:
-            print(f"Exception")
+            continue
 
         temp = splice_playlists(temp)
 
@@ -170,7 +169,7 @@ def song_search():
     for song in songs:
         if song_name in song:
             found.append(song)
-    return render_template('playlist.html', found=found)
+    return render_template('playlist.html', error=found)
 
 
 
@@ -197,7 +196,7 @@ def music():
         cursor=cursor.execute(sql,(new_musician,new_lang,new_title))
         conn.commit()
         return "complete"
-    
+
 @app.route('/addUser', methods=['POST'])
 def addUser():
     conn=db_connection()
